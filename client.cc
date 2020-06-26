@@ -9,8 +9,7 @@
 #include "test.grpc.pb.h"
 
 using namespace std::literals::chrono_literals;
-
-using std::shared_ptr;
+using namespace std;
 
 using grpc::ChannelCredentials;
 using grpc::ClientContext;
@@ -18,8 +17,8 @@ using grpc::CreateChannel;
 using grpc::SslCredentialsOptions;
 
 shared_ptr<ChannelCredentials> GetCredentials() {
-  std::stringstream cert;
-  std::ifstream cert_file("./server.cert");
+  stringstream cert;
+  ifstream cert_file("./server.cert");
   cert << cert_file.rdbuf();
 
   SslCredentialsOptions ssl_opts;
@@ -30,7 +29,7 @@ shared_ptr<ChannelCredentials> GetCredentials() {
 int main() {
   grpc::string server_address{"localhost:50051"};
   HelloRequest request;
-  request.set_name(std::string{"gRPC noob"});
+  request.set_name(string{"gRPC noob"});
 
   auto channel = CreateChannel(server_address, GetCredentials());
   auto stub = TalkToMe::NewStub(channel);
@@ -41,11 +40,11 @@ int main() {
     auto status = stub->HelloWorld(&ctx, request, &reply);
 
     if (status.ok()) {
-      std::cout << "Server response: " << reply.msg() << std::endl;
+      cout << "Server response: " << reply.msg() << endl;
     } else {
-      std::cerr << "Error: " << status.error_message() << std::endl;
+      cerr << "Error: " << status.error_message() << endl;
     }
-    std::this_thread::sleep_for(1s);
+    this_thread::sleep_for(1s);
   }
   return 0;
 }
