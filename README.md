@@ -1,5 +1,10 @@
 # Playing around with gRPC and TLS
 
+# Versions
+* gRPC 1.29.1
+* protoc 3.12.0
+* OpenSSL 1.1.1g
+
 # Works
 * `make certs-rsa`
 * `make server && ./server`
