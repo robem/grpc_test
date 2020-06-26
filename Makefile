@@ -19,18 +19,16 @@ server: test.pb.o test.grpc.pb.o server.o
 %.pb.cc: %.proto
 	$(PROTOC) --proto_path=. --cpp_out=. $<
 
-#certs-ec:
-	#openssl ecparam -name secp384r1 -genkey -out server.key
-	#openssl req -nodes -new -key server.key -subj "/C=NA/ST=NA/O=NA/OU=NA/CN=localhost" -out server.csr
-	#openssl x509 -req -in server.csr -days 1 -signkey server.key -out server.cert
-
 certs-ec:
-	# With EC cert, the server responds with "no shared cipher"
-	openssl ecparam -name secp384r1 -genkey -out server.key
-	openssl req -new -x509 -nodes -days 1 -key server.key -subj "/C=NA/ST=NA/O=NA/OU=NA/CN=localhost" -out ./server.cert
+	openssl ecparam -name secp384r1 -genkey -noout -out server.key
+	openssl req -new -x509 -nodes -days 1 -key server.key -subj "/CN=localhost" -out ./server.cert
+
+certs-ec-prime:
+	openssl ecparam -name prime256v1 -genkey -noout -out server.key
+	openssl req -new -x509 -days 1 -key server.key -subj "/CN=localhost" -out ./server.cert
 
 certs-rsa:
-	openssl req -new -x509 -nodes -days 1 -newkey rsa:1024 -subj "/C=NA/ST=NA/O=NA/OU=NA/CN=localhost" -keyout ./server.key -out ./server.cert
+	openssl req -new -x509 -nodes -days 1 -newkey rsa:1024 -subj "/CN=localhost" -keyout ./server.key -out ./server.cert
 
 format:
 	clang-format -i `find . -name "*.cc"`
